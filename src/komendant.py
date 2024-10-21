@@ -4,7 +4,7 @@ from fastapi import Request
 from fastapi.responses import JSONResponse
 router = APIRouter(prefix="/komendant")
 templates = Jinja2Templates(directory= "templates")
-
+from src.orm.komendant_orm import select_all_occupant
 
 @router.get("/")
 async def main_page(request: Request):
@@ -12,8 +12,10 @@ async def main_page(request: Request):
                                       {"request": request})
 
 
-@router.get('/residents')
+@router.get('/occupants')
 async def get_residents():
-    resp = {"surname": "Дробот", "name": "Дима", "patronymic": "Николаевич", "Photo": " ",
-             "phonenumber": "89254303103", "room": "819б", "check-in_date": "2023-08-31"}
-    return JSONResponse(content=resp)
+    response = await select_all_occupant()
+    return response
+@router.get('/occupants/{id}')
+async def get_occupant_by_id(id: int):
+    return {"message": "hi"}

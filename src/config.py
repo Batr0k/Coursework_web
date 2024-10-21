@@ -11,6 +11,6 @@ class Settings:
     DB_PORT = os.environ["DB_PORT"]
 
     def async_refer_to_db(self):
-        return f"postgresql+asyncpg://{self.DB_USER}:{self.DB_PASS}@{self.DB_HOST}:{self.DB_PORT}/DB_NAME"
+        return f"postgresql+asyncpg://{self.DB_USER}:{self.DB_PASS}@{self.DB_HOST}:{self.DB_PORT}/dormitory"
 
 settings = Settings()
