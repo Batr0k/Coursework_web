@@ -71,13 +71,18 @@ async def inset_payment():
 
 async def insert_furniture():
     async with async_session_factory() as session:
+        rooms = [1, 2, 3, 4, 5, 6]
+        result = await session.execute(
+            select(RoomModel).filter(RoomModel.id.in_(rooms))
+        )
+        rooms_orm = result.scalars().all()
         furniture = [
-            FurnitureModel(name="Шкаф IKEA", description="В идеальном состоянии", cost=23000),
-            FurnitureModel(name="Шкаф Woods", description="В идеальном состоянии", cost=4000),
-            FurnitureModel(name="Тумбочка IKEA", description="В идеальном состоянии", cost=10000),
-            FurnitureModel(name="Тумбочка Woods", description="В идеальном состоянии", cost=10000),
-            FurnitureModel(name="Холодильник Polis", description="В идеальном состоянии", cost=7000),
-            FurnitureModel(name="Холодильник Cold", description="В идеальном состоянии", cost=17000),
+            FurnitureModel(name="Шкаф IKEA", description="В идеальном состоянии", cost=23000, room=rooms_orm[0]),
+            FurnitureModel(name="Шкаф Woods", description="В идеальном состоянии", cost=4000, room=rooms_orm[1]),
+            FurnitureModel(name="Тумбочка IKEA", description="В идеальном состоянии", cost=10000, room=rooms_orm[2]),
+            FurnitureModel(name="Тумбочка Woods", description="В идеальном состоянии", cost=10000, room=rooms_orm[3]),
+            FurnitureModel(name="Холодильник Polis", description="В идеальном состоянии", cost=7000, room=rooms_orm[4]),
+            FurnitureModel(name="Холодильник Cold", description="В идеальном состоянии", cost=17000, room=rooms_orm[5]),
         ]
         session.add_all(furniture)
         await session.commit()

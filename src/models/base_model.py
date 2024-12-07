@@ -14,7 +14,6 @@ class Person(AbstractModel):
     surname: Mapped[str]
     name: Mapped[str]
     patronymic: Mapped[str]
-    photo: Mapped[str]
     phone_number: Mapped[str]
 
 

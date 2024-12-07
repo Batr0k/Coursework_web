@@ -13,7 +13,6 @@ class OccupantPostDTO(BaseModel):
     surname: str
     name: str
     patronymic: str
-    photo: str
     phone_number: str
     birth_date: date
     check_in_date: date
@@ -35,5 +34,8 @@ class FurniturePostDTO(BaseModel):
     name: str
     description: str
     cost: int
-    room: Optional[RoomPostDTO]
+    room: Optional[RoomDTO]
+
+class FurnitureGetDTO(FurniturePostDTO):
+    id: int
 
