@@ -4,8 +4,8 @@ from src.models.base_model import Base
 from src.database import async_engine
 import asyncio
 from src.database import async_session_factory
-from src.models.base_model import FloorModel, RoomTypeModel, CostPerMonthModel, RoomModel, FurnitureModel, PaymentModel
-from src.orm.komendant_orm import add_occupant, select_all_occupant
+from src.models.base_model import (FloorModel, RoomTypeModel, CostPerMonthModel, RoomModel, FurnitureModel, PaymentModel,
+                                   OccupantModel)
 async def reload_db():
     async with async_engine.begin() as conn:
         await conn.run_sync(Base.metadata.drop_all)
@@ -15,6 +15,31 @@ async def reload_db():
     await insert_cost_per_month()
     await insert_rooms()
     await insert_furniture()
+    await insert_occupants()
+
+async def insert_occupants():
+    async with async_session_factory() as session:
+        rooms = await session.execute(
+            select(RoomModel).filter(RoomModel.id.in_([1,2,3,4]))
+        )
+        rooms = rooms.scalars().all()
+        occupants = [
+            OccupantModel(surname="Иванов", name="Иван", patronymic="Иванович", phone_number="88005553535",
+                                 birth_date=datetime.date(1990, 6, 7),
+                          check_in_date=datetime.date(2023, 11, 9), room=rooms[0]),
+            OccupantModel(surname="Иванов", name="Иван", patronymic="Иванович", phone_number="88005553535",
+                          birth_date=datetime.date(1990, 6, 7),
+                          check_in_date=datetime.date(2023, 11, 9), room=rooms[1]),
+            OccupantModel(surname="Иванов", name="Иван", patronymic="Иванович", phone_number="88005553535",
+                          birth_date=datetime.date(1990, 6, 7),
+                          check_in_date=datetime.date(2023, 11, 9), room=rooms[2]),
+            OccupantModel(surname="Иванов", name="Иван", patronymic="Иванович", phone_number="88005553535",
+                          birth_date=datetime.date(1990, 6, 7),
+                          check_in_date=datetime.date(2023, 11, 9), room=rooms[3]),
+        ]
+        session.add_all(occupants)
+        await session.commit()
+
 
 async def insert_floors():
     async with async_session_factory() as session:
@@ -64,7 +89,7 @@ async def insert_rooms():
                 room_count += 1
         session.add_all(room_list)
         await session.commit()
-async def inset_payment():
+async def insert_payment():
     async with async_session_factory() as session:
         session.add(PaymentModel(payment_date=datetime.date(2024, 4,1), number_of_month_paid=2, occupant_id=1))
         await session.commit()
