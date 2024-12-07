@@ -16,6 +16,7 @@ async def reload_db():
     await insert_rooms()
     await insert_furniture()
     await insert_occupants()
+    await insert_payment()
 
 async def insert_occupants():
     async with async_session_factory() as session:
@@ -91,7 +92,21 @@ async def insert_rooms():
         await session.commit()
 async def insert_payment():
     async with async_session_factory() as session:
-        session.add(PaymentModel(payment_date=datetime.date(2024, 4,1), number_of_month_paid=2, occupant_id=1))
+        result = await session.execute(select(OccupantModel))
+        occupants = result.scalars().all()
+        result = await session.execute(select(CostPerMonthModel))
+        cost_per_month_list = result.scalars().all()
+        payments = [
+            PaymentModel(payment_date = datetime.date(2024, 4, 1), number_of_month_paid=4,
+                         occupant=occupants[0], cost_per_month=cost_per_month_list[0]),
+            PaymentModel(payment_date=datetime.date(2024, 3, 1), number_of_month_paid=4,
+                         occupant=occupants[1], cost_per_month=cost_per_month_list[1]),
+            PaymentModel(payment_date=datetime.date(2024, 2, 1), number_of_month_paid=4,
+                         occupant=occupants[2], cost_per_month=cost_per_month_list[2]),
+            PaymentModel(payment_date=datetime.date(2024, 1, 1), number_of_month_paid=4,
+                         occupant=occupants[3], cost_per_month=cost_per_month_list[3]),
+        ]
+        session.add_all(payments)
         await session.commit()
 
 async def insert_furniture():

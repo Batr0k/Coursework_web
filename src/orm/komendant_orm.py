@@ -1,7 +1,6 @@
 from src.database import async_session_factory
 from src.models.base_model import OccupantModel, RoomModel, PaymentModel, FurnitureModel, RoomTypeModel
 from sqlalchemy import select, text
-from sqlalchemy.orm import selectinload, joinedload
 from datetime import date
 from sqlalchemy.orm import selectinload, joinedload
 from src.schemas.komendant_schemas import OccupantGetDTO, RoomTypePostDTO, RoomPostDTO, FloorPostDTO, FurniturePostDTO, FurnitureGetDTO
