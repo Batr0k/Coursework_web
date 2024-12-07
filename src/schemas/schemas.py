@@ -1,6 +1,6 @@
 from pydantic import BaseModel, Field
 from datetime import date
-
+from typing import Optional
 
 class PaymentDTO(BaseModel):
     payment_date: date
@@ -22,6 +22,18 @@ class OccupantPostDTO(BaseModel):
 
 class OccupantGetDTO(OccupantPostDTO):
     id: int
-
-
+class FloorPostDTO(BaseModel):
+    number: int
+class RoomTypePostDTO(BaseModel):
+    max_occupants: int
+    area: int
+class RoomPostDTO(BaseModel):
+    number: int
+    floor: FloorPostDTO
+    room_type: RoomTypePostDTO
+class FurniturePostDTO(BaseModel):
+    name: str
+    description: str
+    cost: int
+    room: Optional[RoomPostDTO]
 

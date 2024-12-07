@@ -12,12 +12,6 @@ margin-bottom: 1%;
 box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.3);
 text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
 }
-.input-search {
-font-size: 19px;
-border: 2px solid;
-border-radius: 7px;
-background: #f1f1f1;
-}
 a {
 font-size: 250%;
 height: 100%;
@@ -50,16 +44,20 @@ display: flex;
 align-items: center;
 margin-bottom: 1%;
 }
-button.search {
-margin-left: 0.5%;
-font-size: 19px;
-border: 1px solid   ;
-border-radius: 7px;
-}
 .row:hover {
 background-color: #adbdac;
 }
 button.add-occupant {
 margin-left: 0.5%;
 font-size: 19px;
+}
+div.work_area {
+display: flex;
+align-items: flex-start; /* Элементы не будут растягиваться по высоте */
+}
+form.update {
+display: flex;
+flex-direction: column;
+margin-left: auto;
+margin-right: auto;
 }

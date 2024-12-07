@@ -1,5 +1,6 @@
 from sqlalchemy.orm import declarative_base, mapped_column, Mapped, relationship
 from sqlalchemy import ForeignKey
+from typing import Optional
 import datetime
 
 Base = declarative_base()
@@ -79,7 +80,8 @@ class FurnitureModel(AbstractModel):
     description: Mapped[str]
     cost: Mapped[int]
     room_id: Mapped[int | None] = mapped_column(ForeignKey("rooms.id", ondelete="SET NULL"))
-    room: Mapped["RoomModel"] = relationship(back_populates="furniture")
+    room: Mapped[Optional["RoomModel"]] = relationship(back_populates="furniture")
+
 
 class PaymentModel(AbstractModel):
     __tablename__ = "payments"

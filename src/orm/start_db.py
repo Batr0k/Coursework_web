@@ -10,6 +10,12 @@ async def reload_db():
     async with async_engine.begin() as conn:
         await conn.run_sync(Base.metadata.drop_all)
         await conn.run_sync(Base.metadata.create_all)
+    await insert_floors()
+    await insert_room_type()
+    await insert_cost_per_month()
+    await insert_rooms()
+    await insert_furniture()
+
 async def insert_floors():
     async with async_session_factory() as session:
         floors = [FloorModel(number=i) for i in range(1, 17)]
@@ -61,6 +67,19 @@ async def insert_rooms():
 async def inset_payment():
     async with async_session_factory() as session:
         session.add(PaymentModel(payment_date=datetime.date(2024, 4,1), number_of_month_paid=2, occupant_id=1))
+        await session.commit()
+
+async def insert_furniture():
+    async with async_session_factory() as session:
+        furniture = [
+            FurnitureModel(name="Шкаф IKEA", description="В идеальном состоянии", cost=23000),
+            FurnitureModel(name="Шкаф Woods", description="В идеальном состоянии", cost=4000),
+            FurnitureModel(name="Тумбочка IKEA", description="В идеальном состоянии", cost=10000),
+            FurnitureModel(name="Тумбочка Woods", description="В идеальном состоянии", cost=10000),
+            FurnitureModel(name="Холодильник Polis", description="В идеальном состоянии", cost=7000),
+            FurnitureModel(name="Холодильник Cold", description="В идеальном состоянии", cost=17000),
+        ]
+        session.add_all(furniture)
         await session.commit()
 asyncio.run(reload_db())
 
