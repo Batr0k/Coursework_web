@@ -5,7 +5,7 @@ from src.schemas.komendant_schemas import OccupantPostDTO, OccupantGetDTO, Furni
 router = APIRouter(prefix="/komendant")
 templates = Jinja2Templates(directory= "templates")
 from src.orm.komendant_orm import (select_all_occupant, add_occupant, get_occupant, update_occupant, select_rooms,
-                                   select_furniture, select_free_rooms, select_furniture_by_id, update_furniture_description_and_room)
+                                   select_furniture, select_free_rooms, select_furniture_by_id, update_furniture_description_and_room, delete_occupant)
 
 @router.get("/")
 async def main_page(request: Request):
@@ -41,4 +41,7 @@ async def get_furniture_by_id(id: int):
 @router.put('/furniture/update/{id}')
 async def put_furniture_description_and_room(id:int, furniture: FurniturePostDTO):
     await update_furniture_description_and_room(id, **furniture.dict())
+@router.delete('/occcupants/{id}')
+async def delete_occupant_(id: int):
+    await delete_occupant(id)
 

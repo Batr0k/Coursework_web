@@ -34,7 +34,7 @@ class FurniturePostDTO(BaseModel):
     name: str
     description: str
     cost: int
-    room: Optional[RoomDTO]
+    room: Optional[RoomDTO] = None
 
 class FurnitureGetDTO(FurniturePostDTO):
     id: int

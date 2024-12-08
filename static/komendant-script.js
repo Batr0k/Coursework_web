@@ -3,6 +3,8 @@ async function update_occupant(id) {
     // Запрос на открытие странички для просмотра подробной информации о жильце или изменении/удалении данных
      response = await fetch(`http://127.0.0.1:8000/komendant/occupants/${id}`);
      data = await response.json();
+     const occupant_h2 = document.getElementById("occupant_h2");
+     occupant_h2.textContent = "Обновить данные о жильце";
      const form = document.getElementById("update_form");
      const clonedForm = form.cloneNode(true);
      form.parentNode.replaceChild(clonedForm, form);
@@ -47,7 +49,7 @@ async function get_occupants() {
     const table = document.getElementById("table");
     const work_area = document.getElementById("work_area");
     const update_form = document.getElementById("update_form");
-    update_form.innerHTML = `
+    update_form.innerHTML = `<h2 id ="occupant_h2">Добавить нового жильца</h2>
             <label>Фамилия</label>
             <input type = "text" id = "surname" name = "surname" required>
             <label>Имя</label>
@@ -70,6 +72,7 @@ async function get_occupants() {
         <th>Телефон</th>
         <th>Комната проживания</th>
         <th>Дата заселения</th>
+        <th>Удалить</th>
         </tr>`;
     const response = await fetch('http://127.0.0.1:8000/komendant/free_rooms');
     const data = await response.json();
@@ -89,18 +92,46 @@ async function get_occupants() {
             newRow.dataset.occupantId = element.id;
             // Добавление к тегу tr класса
             newRow.classList.add("row");
-            newRow.addEventListener('click', () => update_occupant(element.id));
-            newRow.innerHTML = `<td>${element.surname} ${element.name} ${element.patronymic}</td>
-                <td>${element.birth_date}</td>
-                <td>${element.phone_number}</td>
-                <td>${element.room?.number}</td>
-                <td>${element.check_in_date}</td>`;
+            const td1 = document.createElement("td");
+            const td2 = document.createElement("td");
+            const td3 = document.createElement("td");
+            const td4 = document.createElement("td");
+            const td5 = document.createElement("td");
+            const td6 = document.createElement("td");
+            td1.textContent = `${element.surname} ${element.name} ${element.patronymic}`;
+            td1.addEventListener('click', () => update_occupant(element.id));
+            newRow.appendChild(td1);
+            td2.textContent = `${element.birth_date}`;
+            td2.addEventListener('click', () => update_occupant(element.id));
+            newRow.appendChild(td2);
+            td3.textContent = `${element.phone_number}`;
+            td3.addEventListener('click', () => update_occupant(element.id));
+            newRow.appendChild(td3);
+            td4.textContent = `${element.room?.number}`;
+            td4.addEventListener('click', () => update_occupant(element.id));
+            newRow.appendChild(td4);
+            td5.textContent = `${element.check_in_date}`;
+            td5.addEventListener('click', () => update_occupant(element.id));
+            newRow.appendChild(td5);
+            td6.textContent = `X`;
+            td6.addEventListener('click', async function() {
+            await fetch(`http://127.0.0.1:8000/komendant/occcupants/${element.id}`,{
+            method: 'DELETE',
+            headers: {
+            'Content-Type': 'application/json'
+            }
+            });
+            get_occupants();
+            });
+            newRow.appendChild(td6);
             table.appendChild(newRow);
         });
 
     });
 }
 async function insert_occupant() {
+    const occupant_h2 = document.getElementById("occupant_h2");
+     occupant_h2.textContent = "Добавить нового жильца";
      const form = document.getElementById("update_form");
      const clonedForm = form.cloneNode(true);
      form.parentNode.replaceChild(clonedForm, form);
@@ -165,7 +196,7 @@ async function update_furniture(id) {
             name: "",
             cost: 0,
             description: document.getElementById("description").value,
-            room: { number: document.getElementById("room_furniture_select").value }
+            room: (document.getElementById("room_furniture_select").value == 0) ? null : { number: document.getElementById("room_furniture_select").value }
         };
         await fetch(`http://127.0.0.1:8000/komendant/furniture/update/${id}`, {
         method: 'PUT',
@@ -196,10 +227,10 @@ async function get_furniture() {
             </select>
             <input type="submit">`;
     const room_furniture_select = document.getElementById("room_furniture_select");
-    for (let i = 1; i < 161; i++) {
+    for (let i = 0; i < 161; i++) {
         const newOption = document.createElement("option");
         newOption.value = i;
-        newOption.text = i;
+        newOption.text = (i == 0) ? "На склад" : i;
         room_furniture_select.appendChild(newOption);
     }
     const response = await fetch('http://127.0.0.1:8000/komendant/furniture');
@@ -211,11 +242,10 @@ async function get_furniture() {
             newRow.innerHTML = `<td>${element.name}</td>
                 <td>${element.description}</td>
                 <td>${element.cost}</td>
-                <td>${element.room.number}</td>`;
+                <td>${element.room?.number ?? "На складе"}</td>`;
             table.appendChild(newRow);
     });
 }
-
 const a1 = document.getElementById("a1");
 const a2 = document.getElementById("a2");
 const a3 = document.getElementById("a3");

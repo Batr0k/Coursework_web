@@ -17,6 +17,12 @@ class CostPerMonthPostDTO(BaseModel):
     price_date: date
     price: int
     room_type: RoomTypeGetDTO
+class FurniturePostDTO(BaseModel):
+    name: str
+    description: str
+    cost: int
+class FurnitureGetDTO(FurniturePostDTO):
+    id: int
 class CostPerMonthGetDTO(CostPerMonthPostDTO):
     id: int
 class PaymentPostDTO(BaseModel):

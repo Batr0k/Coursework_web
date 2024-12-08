@@ -1,6 +1,6 @@
 from src.database import async_session_factory
 from src.models.base_model import OccupantModel, RoomModel, PaymentModel, FurnitureModel, RoomTypeModel
-from sqlalchemy import select, text
+from sqlalchemy import select, text, delete
 from datetime import date
 from sqlalchemy.orm import selectinload, joinedload
 from src.schemas.komendant_schemas import OccupantGetDTO, RoomTypePostDTO, RoomPostDTO, FloorPostDTO, FurniturePostDTO, FurnitureGetDTO
@@ -91,9 +91,10 @@ async def select_furniture_by_id(id: int):
 async def update_furniture_description_and_room(id: int, description, room, name, cost):
     async with async_session_factory() as session:
         furniture = await session.get(FurnitureModel, id)
-        room = await session.get(RoomModel, room["number"])
-        furniture.description = description
+        if room:
+            room = await session.get(RoomModel, room["number"])
         furniture.room = room
+        furniture.description = description
         await session.commit()
 
 async def select_free_rooms():
@@ -106,7 +107,12 @@ async def select_free_rooms():
         order by rooms.number"""))
         result = [list(row) for row in result.fetchall()]
         return result
-
+async def delete_occupant(id: int):
+    async with async_session_factory() as session:
+        await session.execute(
+            delete(OccupantModel).filter(OccupantModel.id==id)
+        )
+        await session.commit()
 # asyncio.run(select_free_rooms())
 
 
