@@ -1,7 +1,7 @@
-
+const DOMEN = "http://127.0.0.1:8000/";
 async function update_occupant(id) {
     // Запрос на открытие странички для просмотра подробной информации о жильце или изменении/удалении данных
-     response = await fetch(`http://127.0.0.1:8000/komendant/occupants/${id}`);
+     response = await fetch(`${DOMEN}komendant/occupants/${id}`);
      data = await response.json();
      const occupant_h2 = document.getElementById("occupant_h2");
      occupant_h2.textContent = "Обновить данные о жильце";
@@ -26,7 +26,7 @@ async function update_occupant(id) {
             payments: null,
             room: { number: document.getElementById("room_select").value }
         };
-        await fetch(`http://127.0.0.1:8000/komendant/occupants/update/${id}`, {
+        await fetch(`${DOMEN}komendant/occupants/update/${id}`, {
         method: 'PUT',
         headers: {
             'Content-Type': 'application/json'
@@ -74,7 +74,7 @@ async function get_occupants() {
         <th>Дата заселения</th>
         <th>Удалить</th>
         </tr>`;
-    const response = await fetch('http://127.0.0.1:8000/komendant/free_rooms');
+    const response = await fetch(`${DOMEN}komendant/free_rooms`);
     const data = await response.json();
     const room_select = document.getElementById("room_select");
     data.forEach(element => {
@@ -83,7 +83,7 @@ async function get_occupants() {
         newOption.text = element[1];
         room_select.add(newOption);
     });
-    fetch('http://127.0.0.1:8000/komendant/occupants')
+    fetch(`${DOMEN}komendant/occupants`)
     .then(response => response.json())
     .then(data => {
         data.forEach(element => {
@@ -115,7 +115,7 @@ async function get_occupants() {
             newRow.appendChild(td5);
             td6.textContent = `X`;
             td6.addEventListener('click', async function() {
-            await fetch(`http://127.0.0.1:8000/komendant/occcupants/${element.id}`,{
+            await fetch(`${DOMEN}komendant/occcupants/${element.id}`,{
             method: 'DELETE',
             headers: {
             'Content-Type': 'application/json'
@@ -148,7 +148,7 @@ clonedForm.addEventListener("submit", async function(event){
         payments: null,
         room:  { number: document.getElementById("room_select").value }
     };
-     await fetch("http://127.0.0.1:8000/komendant/occupants", {
+     await fetch(`${DOMEN}komendant/occupants`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
@@ -170,7 +170,7 @@ async function get_rooms() {
     </tr>`;
     const update_form = document.getElementById("update_form");
     update_form.innerHTML = "";
-    const response = await fetch('http://127.0.0.1:8000/komendant/rooms');
+    const response = await fetch(`${DOMEN}komendant/rooms`);
     const data = await response.json();
     data.forEach(element => {
         const newRow = document.createElement("tr");
@@ -184,7 +184,7 @@ async function get_rooms() {
 }
 async function update_furniture(id) {
 // Запрос на открытие странички для просмотра подробной информации о жильце или изменении/удалении данных
-     response = await fetch(`http://127.0.0.1:8000/komendant/furniture/${id}`);
+     response = await fetch(`${DOMEN}komendant/furniture/${id}`);
      data = await response.json();
      const form = document.getElementById("update_form");
      const clonedForm = form.cloneNode(true);
@@ -198,7 +198,7 @@ async function update_furniture(id) {
             description: document.getElementById("description").value,
             room: (document.getElementById("room_furniture_select").value == 0) ? null : { number: document.getElementById("room_furniture_select").value }
         };
-        await fetch(`http://127.0.0.1:8000/komendant/furniture/update/${id}`, {
+        await fetch(`${DOMEN}komendant/furniture/update/${id}`, {
         method: 'PUT',
         headers: {
             'Content-Type': 'application/json'
@@ -233,7 +233,7 @@ async function get_furniture() {
         newOption.text = (i == 0) ? "На склад" : i;
         room_furniture_select.appendChild(newOption);
     }
-    const response = await fetch('http://127.0.0.1:8000/komendant/furniture');
+    const response = await fetch(`${DOMEN}komendant/furniture`);
     const data = await response.json();
     data.forEach(element => {
         const newRow = document.createElement("tr");

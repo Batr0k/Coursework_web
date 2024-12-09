@@ -1,3 +1,4 @@
+const DOMEN = "http://127.0.0.1:8000/";
 async function get_payments() {
 const table = document.getElementById("table");
 const insert_form = document.getElementById("insert_form");
@@ -16,7 +17,7 @@ clonedForm.addEventListener("submit", async function(event){
         const occupant_id = document.getElementById("occupant_select").value;
         const number_of_month_paid = document.getElementById("number_month").value;
         const date_paid = document.getElementById("date_paid").value;
-        await fetch(`http://127.0.0.1:8000/accountant/insert_payment?id=${occupant_id}&number_of_month_paid=${number_of_month_paid}&payment_date=${date_paid}`, {
+        await fetch(`${DOMEN}accountant/insert_payment?id=${occupant_id}&number_of_month_paid=${number_of_month_paid}&payment_date=${date_paid}`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
@@ -24,7 +25,7 @@ clonedForm.addEventListener("submit", async function(event){
     });
     get_payments();
 });
-const response_occupants = await fetch('http://127.0.0.1:8000/accountant/occupants');
+const response_occupants = await fetch(`${DOMEN}accountant/occupants`);
 const data_occupants = await response_occupants.json();
 const occupant_select = document.getElementById("occupant_select");
 data_occupants.forEach(i => {
@@ -41,7 +42,7 @@ table.innerHTML =`<tr>
     <th>Количество оплаченных месяцев</th>
     <th>Стоимость в месяц, руб</th>
     </tr>`;
-    response = await fetch('http://127.0.0.1:8000/accountant/payments');
+    response = await fetch(`${DOMEN}accountant/payments`);
     const data = await response.json();
     data.forEach(element => {
         const newRow = document.createElement("tr");
@@ -79,7 +80,7 @@ clonedForm.innerHTML = ` <h2>Добавление новой стоимости 
         price: document.getElementById("price").value,
         room_type: JSON.parse(document.getElementById("room_type").value)
         };
-        await fetch('http://127.0.0.1:8000/accountant/insert_cost_per_month', {
+        await fetch(`${DOMEN}accountant/insert_cost_per_month`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
@@ -94,7 +95,7 @@ clonedForm.innerHTML = ` <h2>Добавление новой стоимости 
         <th>Установленная цена</th>
         <th>Для комнаты к вместимостью, человек</th>
         </tr>`;
-        const response = await fetch('http://127.0.0.1:8000/accountant/cost_per_month');
+        const response = await fetch(`${DOMEN}accountant/cost_per_month`);
     const data = await response.json();
     data.forEach(element => {
         const newRow = document.createElement("tr");
@@ -124,7 +125,7 @@ clonedForm.innerHTML = `<h2>Добавление новой мебели</h2><la
         name: document.getElementById("name").value,
         cost: document.getElementById("cost").value
         };
-        await fetch('http://127.0.0.1:8000/accountant/insert_furniture', {
+        await fetch(`${DOMEN}accountant/insert_furniture`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
@@ -140,7 +141,7 @@ clonedForm.innerHTML = `<h2>Добавление новой мебели</h2><la
     <th>Стоимость, руб</th>
     <th>Удалить</th>
     </tr>`;
-    const response = await fetch('http://127.0.0.1:8000/accountant/furniture');
+    const response = await fetch(`${DOMEN}accountant/furniture`);
     const data = await response.json();
     data.forEach(element => {
         const newRow = document.createElement("tr");
@@ -151,7 +152,7 @@ clonedForm.innerHTML = `<h2>Добавление новой мебели</h2><la
             const td = document.createElement("td");
             td.textContent = "X";
             td.addEventListener("click", async function() {
-            await fetch(`http://127.0.0.1:8000/accountant/furniture/${element.id}`, {
+            await fetch(`${DOMEN}accountant/furniture/${element.id}`, {
         method: 'DELETE',
         headers: {
             'Content-Type': 'application/json'
