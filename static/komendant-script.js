@@ -137,7 +137,6 @@ async function insert_occupant() {
      form.parentNode.replaceChild(clonedForm, form);
      clonedForm.reset();
 clonedForm.addEventListener("submit", async function(event){
-    event.preventDefault();
     const formData = {
         surname: document.getElementById("surname").value,
         name: document.getElementById("name").value,
@@ -155,7 +154,6 @@ clonedForm.addEventListener("submit", async function(event){
         },
         body: JSON.stringify(formData)
     });
-    get_occupants();
 });
 }
 async function get_rooms() {

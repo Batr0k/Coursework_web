@@ -5,7 +5,7 @@ from src.database import async_engine
 import asyncio
 from src.database import async_session_factory
 from src.models.base_model import (FloorModel, RoomTypeModel, CostPerMonthModel, RoomModel, FurnitureModel, PaymentModel,
-                                   OccupantModel)
+                                   OccupantModel, WorkerModel, PositionAtWorkModel)
 async def reload_db():
     async with async_engine.begin() as conn:
         await conn.run_sync(Base.metadata.drop_all)
@@ -17,6 +17,8 @@ async def reload_db():
     await insert_furniture()
     await insert_occupants()
     await insert_payment()
+    await insert_position_at_work()
+    await insert_workers()
 
 async def insert_occupants():
     async with async_session_factory() as session:
@@ -125,6 +127,33 @@ async def insert_furniture():
             FurnitureModel(name="Холодильник Cold", description="В идеальном состоянии", cost=17000, room=rooms_orm[5]),
         ]
         session.add_all(furniture)
+        await session.commit()
+async def insert_position_at_work():
+    async with async_session_factory() as session:
+        positions = [
+            PositionAtWorkModel(position="Охранник", salary=40000),
+            PositionAtWorkModel(position="Бухгалер", salary=60000),
+            PositionAtWorkModel(position="Уборщик", salary=30000),
+            PositionAtWorkModel(position="Комендант", salary=50000),
+        ]
+        session.add_all(positions)
+        await session.commit()
+async def insert_workers():
+    async with async_session_factory() as session:
+        res = await session.execute(
+            select(PositionAtWorkModel)
+        )
+        positions_at_work = res.scalars().all()
+        workers = [
+            WorkerModel(surname="Иванов", name="Иван", patronymic="Иванович", phone_number="88005553535", position_at_work=positions_at_work[0]),
+            WorkerModel(surname="Петрова", name="Галина", patronymic="Андреевна", phone_number="88005553535",
+                        position_at_work=positions_at_work[1]),
+            WorkerModel(surname="Ветров", name="Михаил", patronymic="Петрович", phone_number="88005553535",
+                        position_at_work=positions_at_work[2]),
+            WorkerModel(surname="Поддубная", name="Ирина", patronymic="Николаевна", phone_number="88005553535",
+                        position_at_work=positions_at_work[3]),
+        ]
+        session.add_all(workers)
         await session.commit()
 asyncio.run(reload_db())
 

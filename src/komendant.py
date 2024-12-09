@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Form, File, UploadFile
+from fastapi import APIRouter
 from fastapi.templating import Jinja2Templates
 from fastapi import Request
 from src.schemas.komendant_schemas import OccupantPostDTO, OccupantGetDTO, FurniturePostDTO
