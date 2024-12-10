@@ -38,6 +38,18 @@ async def get_worker(id: int):
         )
         res_scalars = res_orm.scalars().first()
         return WorkerGetDTO.model_validate(res_scalars, from_attributes=True)
-async def update_worker(id):
+async def update_worker(id: int, worker: WorkerPostDTO):
     async with async_session_factory() as session:
-        worker
+        worker_orm = await session.get(WorkerModel, id)
+        worker_orm.position_at_work = await session.get(PositionAtWorkModel, worker.position_at_work.id)
+        worker_orm.surname = worker.surname
+        worker_orm.name = worker.name
+        worker_orm.patronymic = worker.patronymic
+        worker_orm.phone_number = worker.phone_number
+        await session.commit()
+
+async def update_position_at_work(id: int, salary: int):
+    async with async_session_factory() as session:
+        position_at_work = await session.get(PositionAtWorkModel, id)
+        position_at_work.salary = salary
+        await session.commit()

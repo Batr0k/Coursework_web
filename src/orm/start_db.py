@@ -5,7 +5,7 @@ from src.database import async_engine
 import asyncio
 from src.database import async_session_factory
 from src.models.base_model import (FloorModel, RoomTypeModel, CostPerMonthModel, RoomModel, FurnitureModel, PaymentModel,
-                                   OccupantModel, WorkerModel, PositionAtWorkModel)
+                                   OccupantModel, WorkerModel, PositionAtWorkModel, UserModel)
 async def reload_db():
     async with async_engine.begin() as conn:
         await conn.run_sync(Base.metadata.drop_all)
@@ -19,6 +19,7 @@ async def reload_db():
     await insert_payment()
     await insert_position_at_work()
     await insert_workers()
+    await insert_users()
 
 async def insert_occupants():
     async with async_session_factory() as session:
@@ -154,6 +155,15 @@ async def insert_workers():
                         position_at_work=positions_at_work[3]),
         ]
         session.add_all(workers)
+        await session.commit()
+async def insert_users():
+    async with async_session_factory() as session:
+        users = [
+            UserModel(login="accountant", password="accountant"),
+            UserModel(login="komendant", password="komendant"),
+            UserModel(login="director", password="director"),
+        ]
+        session.add_all(users)
         await session.commit()
 asyncio.run(reload_db())
 

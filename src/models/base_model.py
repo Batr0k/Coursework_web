@@ -21,15 +21,15 @@ class UserModel(AbstractModel):
     __tablename__ = "users"
     login: Mapped[str]
     password: Mapped[str]
-    worker_id: Mapped[int] = mapped_column(ForeignKey("workers.id", ondelete="CASCADE"))
-    worker: Mapped["WorkerModel"] = relationship(back_populates="user")
+    # worker_id: Mapped[int] = mapped_column(ForeignKey("workers.id", ondelete="CASCADE"))
+    # worker: Mapped["WorkerModel"] = relationship(back_populates="user")
 
 
 class WorkerModel(Person):
     __tablename__ = "workers"
     position_at_work_id: Mapped[int | None] = mapped_column(ForeignKey("positions_at_work.id", ondelete="SET NULL"))
     position_at_work: Mapped["PositionAtWorkModel"] = relationship(back_populates="workers")
-    user: Mapped["UserModel"] = relationship(back_populates="worker")
+    # user: Mapped["UserModel"] = relationship(back_populates="worker")
 
 
 class PositionAtWorkModel(AbstractModel):

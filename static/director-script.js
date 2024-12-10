@@ -1,4 +1,47 @@
 const DOMEN = "http://127.0.0.1:8000/";
+async function update_position_at_work(id) {
+const worker_form = document.getElementById("worker_form");
+    worker_form.innerHTML = `
+    <h2 id ="position_h2">Обновить данные о должности</h2>
+            <label>Оклад</label>
+            <input type = "number" id = "salary" name = "salary" required>
+            <input type="submit">`;
+const clonedForm = worker_form.cloneNode(true);
+worker_form.parentNode.replaceChild(clonedForm, worker_form);
+clonedForm.addEventListener("submit", async function(event) {
+//event.preventDefault();
+await fetch(`${DOMEN}director/position_at_work/${id}?salary=${document.getElementById("salary").value}`, {
+     method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+    });
+});
+}
+async function get_position_at_work() {
+    const worker_form = document.getElementById("worker_form");
+    worker_form.innerHTML = ``;
+    const table = document.getElementById("table");
+    table.innerHTML =`<tr>
+        <th>Должность</th>
+        <th>Оклад, руб</th>
+        </tr>`;
+    const response_position_at_work = await fetch(`${DOMEN}director/position_at_work`);
+    const data_position_at_work = await response_position_at_work.json();
+    data_position_at_work.forEach(element => {
+            const newRow = document.createElement("tr");
+            newRow.classList.add("row");
+            const td1 = document.createElement("td");
+            const td2 = document.createElement("td");
+            td1.textContent = `${element.position}`;
+            td1.addEventListener('click', () => update_position_at_work(element.id));
+            newRow.appendChild(td1);
+            td2.textContent = `${element.salary}`;
+            td2.addEventListener('click', () => update_position_at_work(element.id));
+            newRow.appendChild(td2);
+            table.appendChild(newRow);
+    });
+}
 async function insert_worker() {
 const worker_form = document.getElementById("worker_form");
 worker_form.innerHTML = `
@@ -44,6 +87,8 @@ clonedForm.addEventListener("submit", async function(event) {
 });
 };
 async function update_workers(id) {
+const worker_h2 = document.getElementById("worker_h2");
+worker_h2.textContent = "Обновить данные работника";
 const worker_form = document.getElementById("worker_form");
 const response_workers = await fetch(`${DOMEN}director/workers/${id}`);
 const data_workers = await response_workers.json();
@@ -61,7 +106,7 @@ const formData = {
         phone_number: document.getElementById("phone_number").value,
         position_at_work: JSON.parse(document.getElementById("position_at_work_select").value)
     }
-    await fetch(`${DOMEN}director/workers/{id}`, {
+    await fetch(`${DOMEN}director/workers/${id}`, {
      method: 'PUT',
         headers: {
             'Content-Type': 'application/json'
@@ -125,4 +170,6 @@ data_workers.forEach(element => {
 }
 get_workers();
 const a1 = document.getElementById("a1");
+const a2 = document.getElementById("a2");
 a1.addEventListener("click", get_workers);
+a2.addEventListener("click", get_position_at_work);

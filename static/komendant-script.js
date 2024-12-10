@@ -23,7 +23,6 @@ async function update_occupant(id) {
             phone_number: document.getElementById("phone_number").value,
             birth_date: document.getElementById("birth_date").value,
             check_in_date: document.getElementById("check_in_date").value,
-            payments: null,
             room: { number: document.getElementById("room_select").value }
         };
         await fetch(`${DOMEN}komendant/occupants/update/${id}`, {
@@ -67,7 +66,9 @@ async function get_occupants() {
             <input type="date" name = "check_in_date" id = "check_in_date" required>
             <input type="submit">`;
     table.innerHTML = `<tr>
-        <th>ФИО</th>
+        <th>Фамилия</th>
+        <th>Имя</th>
+        <th>Отчество</th>
         <th>Год рождения</th>
         <th>Телефон</th>
         <th>Комната проживания</th>
@@ -92,15 +93,23 @@ async function get_occupants() {
             newRow.dataset.occupantId = element.id;
             // Добавление к тегу tr класса
             newRow.classList.add("row");
-            const td1 = document.createElement("td");
+            const td11 = document.createElement("td");
+            const td12 = document.createElement("td");
+            const td13 = document.createElement("td");
             const td2 = document.createElement("td");
             const td3 = document.createElement("td");
             const td4 = document.createElement("td");
             const td5 = document.createElement("td");
             const td6 = document.createElement("td");
-            td1.textContent = `${element.surname} ${element.name} ${element.patronymic}`;
-            td1.addEventListener('click', () => update_occupant(element.id));
-            newRow.appendChild(td1);
+            td11.textContent = `${element.surname}`;
+            td11.addEventListener('click', () => update_occupant(element.id));
+            newRow.appendChild(td11);
+            td12.textContent = `${element.name}`;
+            td12.addEventListener('click', () => update_occupant(element.id));
+            newRow.appendChild(td12);
+            td13.textContent = `${element.patronymic}`;
+            td13.addEventListener('click', () => update_occupant(element.id));
+            newRow.appendChild(td13);
             td2.textContent = `${element.birth_date}`;
             td2.addEventListener('click', () => update_occupant(element.id));
             newRow.appendChild(td2);
@@ -144,7 +153,6 @@ clonedForm.addEventListener("submit", async function(event){
         phone_number: document.getElementById("phone_number").value,
         birth_date: document.getElementById("birth_date").value,
         check_in_date: document.getElementById("check_in_date").value,
-        payments: null,
         room:  { number: document.getElementById("room_select").value }
     };
      await fetch(`${DOMEN}komendant/occupants`, {

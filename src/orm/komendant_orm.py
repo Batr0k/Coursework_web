@@ -53,7 +53,6 @@ async def update_occupant(id: int, surname, name, patronymic, phone_number, room
         occupant.phone_number = phone_number
         occupant.birth_date = birth_date
         occupant.check_in_date = check_in_date
-        occupant.payments = payments if payments is not None else []
         occupant.room = room if room is not None else None
         await session.commit()
 # Получение всех комнат
