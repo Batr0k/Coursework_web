@@ -24,7 +24,9 @@ position_data.forEach(element => {
     option.textContent = element.position;
     position_at_work_select.appendChild(option);
 });
-worker_form.addEventListener("submit", async function(event) {
+     const clonedForm = worker_form.cloneNode(true);
+     worker_form.parentNode.replaceChild(clonedForm, worker_form);
+clonedForm.addEventListener("submit", async function(event) {
     const formData = {
         surname: document.getElementById("surname").value,
         name: document.getElementById("name").value,
@@ -41,6 +43,34 @@ worker_form.addEventListener("submit", async function(event) {
     });
 });
 };
+async function update_workers(id) {
+const worker_form = document.getElementById("worker_form");
+const response_workers = await fetch(`${DOMEN}director/workers/${id}`);
+const data_workers = await response_workers.json();
+document.getElementById("surname").value = data_workers.surname;
+document.getElementById("name").value = data_workers.name;
+document.getElementById("patronymic").value = data_workers.patronymic;
+document.getElementById("phone_number").value = data_workers.phone_number;
+const clonedForm = worker_form.cloneNode(true);
+worker_form.parentNode.replaceChild(clonedForm, worker_form);
+clonedForm.addEventListener("submit", async function(event) {
+const formData = {
+        surname: document.getElementById("surname").value,
+        name: document.getElementById("name").value,
+        patronymic: document.getElementById("patronymic").value,
+        phone_number: document.getElementById("phone_number").value,
+        position_at_work: JSON.parse(document.getElementById("position_at_work_select").value)
+    }
+    await fetch(`${DOMEN}director/workers/{id}`, {
+     method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(formData)
+    });
+ });
+
+}
 async function get_workers() {
 insert_worker();
 const table = document.getElementById("table");
@@ -65,32 +95,34 @@ data_workers.forEach(element => {
             const td5 = document.createElement("td");
             const td6 = document.createElement("td");
             td1.textContent = `${element.surname}`;
-//            td1.addEventListener('click', () => update_occupant(element.id));
+            td1.addEventListener('click', () => update_workers(element.id));
             newRow.appendChild(td1);
             td2.textContent = `${element.name}`;
-//            td2.addEventListener('click', () => update_occupant(element.id));
+            td2.addEventListener('click', () => update_workers(element.id));
             newRow.appendChild(td2);
             td3.textContent = `${element.patronymic}`;
-//            td3.addEventListener('click', () => update_occupant(element.id));
+            td3.addEventListener('click', () => update_workers(element.id));
             newRow.appendChild(td3);
             td4.textContent = `${element.phone_number}`;
-//            td4.addEventListener('click', () => update_occupant(element.id));
+            td4.addEventListener('click', () => update_workers(element.id));
             newRow.appendChild(td4);
             td5.textContent = `${element.position_at_work.position}`;
-//            td5.addEventListener('click', () => update_occupant(element.id));
+            td5.addEventListener('click', () => update_workers(element.id));
             newRow.appendChild(td5);
             td6.textContent = `X`;
-//            td6.addEventListener('click', async function() {
-//            await fetch(`${DOMEN}komendant/occcupants/${element.id}`,{
-//            method: 'DELETE',
-//            headers: {
-//            'Content-Type': 'application/json'
-//            }
-//            });
-//            get_occupants();
-//            });
+            td6.addEventListener('click', async function() {
+            await fetch(`${DOMEN}director/workers/${element.id}`,{
+            method: 'DELETE',
+            headers: {
+            'Content-Type': 'application/json'
+            }
+            });
+            get_workers();
+            });
             newRow.appendChild(td6);
             table.appendChild(newRow);
         });
 }
 get_workers();
+const a1 = document.getElementById("a1");
+a1.addEventListener("click", get_workers);

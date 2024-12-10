@@ -1,7 +1,7 @@
 from fastapi import APIRouter
 from fastapi.templating import Jinja2Templates
 from fastapi import Request
-from src.orm.director_orm import select_workers, select_position_at_work, insert_worker
+from src.orm.director_orm import select_workers, select_position_at_work, insert_worker, delete_worker, get_worker
 from src.schemas.director_schemas import WorkerPostDTO
 
 router = APIRouter(prefix="/director")
@@ -20,3 +20,10 @@ async def get_position_at_work():
 @router.post('/workers')
 async def insert_worker_(worker: WorkerPostDTO):
     await insert_worker(worker)
+@router.delete('/workers/{id}')
+async def delete_workers_(id:int):
+    await delete_worker(id)
+
+@router.get('/workers/{id}')
+async def get_worker_(id: int):
+    return await get_worker(id)
