@@ -3,6 +3,7 @@ from sqlalchemy import select
 from src.models.base_model import Base
 from src.database import async_engine
 import asyncio
+from hashlib import sha256
 from src.database import async_session_factory
 from src.models.base_model import (FloorModel, RoomTypeModel, CostPerMonthModel, RoomModel, FurnitureModel, PaymentModel,
                                    OccupantModel, WorkerModel, PositionAtWorkModel, UserModel)
@@ -159,9 +160,9 @@ async def insert_workers():
 async def insert_users():
     async with async_session_factory() as session:
         users = [
-            UserModel(login="accountant", password="accountant"),
-            UserModel(login="komendant", password="komendant"),
-            UserModel(login="director", password="director"),
+            UserModel(login="accountant", password=sha256("accountant".encode()).hexdigest()),
+            UserModel(login="komendant", password=sha256("komendant".encode()).hexdigest()),
+            UserModel(login="director", password=sha256("director".encode()).hexdigest()),
         ]
         session.add_all(users)
         await session.commit()

@@ -3,17 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
-    <script src="script.js"></script>
     <link rel="stylesheet" href="/static/style-login.css">
 </head>
 <body>
 <h1>Авторизация в систему управления общежитием</h1>
-<form class = "form-login">
+<form class = "form-login" id = "form-login">
     <label for = "login">Логин</label>
     <input id = "login" type = "text" autofocus required>
     <label for = "password"> Пароль</label>
-    <input id = password type = "password" required>
-    <input type="button" class = "button-login" value = "Войти">
+    <input id = "password" type = "password" required>
+    <input type="submit" class = "button-login" value = "Войти">
 </form>
+<script src = "../static/login-script.js" defer></script>
 </body>
 </html>
