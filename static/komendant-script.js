@@ -1,4 +1,9 @@
 const DOMEN = "http://127.0.0.1:8000/";
+
+document.getElementById("logout").addEventListener("click", async function() {
+const response = await fetch(`${DOMEN}logout`);
+window.location.href = `${DOMEN}`;
+});
 async function update_occupant(id) {
     // Запрос на открытие странички для просмотра подробной информации о жильце или изменении/удалении данных
      response = await fetch(`${DOMEN}komendant/occupants/${id}`);
@@ -252,6 +257,8 @@ async function get_furniture() {
             table.appendChild(newRow);
     });
 }
+
+
 const a1 = document.getElementById("a1");
 const a2 = document.getElementById("a2");
 const a3 = document.getElementById("a3");
@@ -262,4 +269,5 @@ a1.addEventListener('click', get_occupants);
 a2.addEventListener('click', get_rooms);
 a3.addEventListener('click', get_furniture);
 add_occupant_button.addEventListener('click', insert_occupant);
+
 // Добавление обработчика событий в форму

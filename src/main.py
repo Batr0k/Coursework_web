@@ -76,3 +76,9 @@ async def login(response: Response, user_dto: UserDTO):
         httponly=True,
         expires=expires
     )
+    return { "login": user.login }
+
+@app.get('/logout')
+async def logout(response: Response):
+    response.delete_cookie(key="auth_token")
+    return {"message": "Cookie deleted"}

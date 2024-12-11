@@ -7,11 +7,13 @@ const formData = {
     password: document.getElementById("password").value
 }
 
-await fetch(`${DOMEN}login`, {
+const response = await fetch(`${DOMEN}login`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
         },
         body: JSON.stringify(formData)
     });
+const response_body = await response.json();
+window.location.href = `${DOMEN}${response_body.login}`;
 });

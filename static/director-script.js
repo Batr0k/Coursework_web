@@ -173,3 +173,7 @@ const a1 = document.getElementById("a1");
 const a2 = document.getElementById("a2");
 a1.addEventListener("click", get_workers);
 a2.addEventListener("click", get_position_at_work);
+document.getElementById("logout").addEventListener("click", async function() {
+await fetch(`${DOMEN}logout`);
+window.location.href = `${DOMEN}`;
+});

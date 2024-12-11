@@ -1,4 +1,8 @@
 const DOMEN = "http://127.0.0.1:8000/";
+document.getElementById("logout").addEventListener("click", async function() {
+await fetch(`${DOMEN}logout`);
+window.location.href = `${DOMEN}`;
+});
 async function get_payments() {
 const table = document.getElementById("table");
 const insert_form = document.getElementById("insert_form");
